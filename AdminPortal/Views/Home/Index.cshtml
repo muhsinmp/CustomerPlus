@@ -1,0 +1,43 @@
+﻿
+@model IEnumerable<DataAccess.Models.CustomerModel>
+
+@{
+    ViewData["Title"] = "Customer List";
+}
+
+<h2>@ViewData["Title"]</h2>
+<div><a asp-action="Create" class="btn btn-primary">Add Customer</a></div>
+<div>
+    <table >
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Area</th>
+                <th>City</th>
+                <th>Region</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var customer in Model)
+            {
+                <tr>
+                    <td>@customer.FirstName</td>
+                    <td>@customer.LastName</td>
+                    <td>@customer.Area</td>
+                    <td>@customer.City</td>
+                    <td>@customer.Region</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@customer.Id" class="btn btn-primary">Edit</a>
+                        <form asp-action="Delete" asp-route-id="@customer.Id" method="post" style="display:inline;">
+                            <button onclick="return confirm('Are you sure you want to delete the customer ?')" type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
