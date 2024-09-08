@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using Repository.Customer;
 using System.Text;
 using WebAPI.Account;
+using WebAPI.Options;
 
 namespace WebAPI
 {
@@ -56,6 +58,14 @@ namespace WebAPI
 
             services.AddScoped<IAccountRepo, AccountRepo>();
             services.AddTransient<ICustomerRepo, CustomerRepo>();
+
+            services.AddSwaggerGen(c => { //<-- NOTE 'Add' instead of 'Configure'
+                c.SwaggerDoc("v1", new OpenApiInfo
+                {
+                    Title = "CustomerPlus API",
+                    Version = "v1"
+                });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -65,6 +75,12 @@ namespace WebAPI
             {
                 app.UseDeveloperExceptionPage();
             }
+            var swaggerOptions = new SwaggerOptions();
+            Configuration.GetSection(nameof(Swashbuckle.AspNetCore.Swagger.SwaggerOptions)).Bind(swaggerOptions);
+
+            app.UseSwagger(options => { options.RouteTemplate = swaggerOptions.JsonRoute; });
+
+            app.UseSwaggerUI(Options => { Options.SwaggerEndpoint(swaggerOptions.UiEndpoint, swaggerOptions.Description); });
 
             app.UseRouting();
 

@@ -44,10 +44,13 @@ namespace AdminPortal
         {
             // Other configurations
             app.UseDeveloperExceptionPage();
+            
+            app.UseStaticFiles();
             app.UseSession();
             app.UseRouting();
             app.UseAuthentication();
             app.UseAuthorization();
+            
             app.UseEndpoints(endpoints =>
             {
                 // Define the default route pattern
